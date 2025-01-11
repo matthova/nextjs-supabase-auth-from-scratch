@@ -1,15 +1,16 @@
 "use client";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "../lib/store";
-import { userActions, UserObject } from "@/lib/slices/userSlice";
+import { userActions } from "@/lib/slices/userSlice";
+import { User } from "@supabase/supabase-js";
 
 export default function StoreProvider({
   children,
   initialUser,
 }: {
   children: React.ReactNode;
-  initialUser: UserObject | null;
+  initialUser: User | null;
 }) {
   const storeRef = useRef<AppStore | null>(null);
   if (!storeRef.current) {

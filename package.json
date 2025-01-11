@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.12",
     "cookies-next": "^5.0.2",
     "next": "15.1.4",
