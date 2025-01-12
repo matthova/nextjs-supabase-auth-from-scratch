@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) that is utilizing Supabase for Auth and Storage
+
+The purpose of this repo is to prove out core product requirements for Supabase including the following:
+
+- [x] Auto creation of anonymous users
+- [ ] Account linking with email / password
+- [ ] Sign in with email / password
+- [ ] Password recovery / reset
+- [ ] Account creation with magic link
+- [ ] Sign in with magic link
+- [ ] Account linking with Google
 
 ## Getting Started
 
-First, run the development server:
+### Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# run this the first time and whenever you add additional dependencies
+pnpm install
+```
+
+### Start the development server
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# User creation and linking flows
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Auto creation of anonymous users
 
-## Learn More
+```mermaid
+sequenceDiagram
+    participant A as Browser
+    participant B as NextJS Middleware
+    participant C as NextJS Route
+    participant D as Supabase Server
+    participant E as Supabase Database
 
-To learn more about Next.js, take a look at the following resources:
+    A->>B: Request site (no cookies)
+    B->>B: Parse cookies to get user credentials
+    B->>D: Validate user credentials
+    D->>E: Validate user credentials
+    E->>D: Return user (none found)
+    D->>B: Return user (none found)
+    B->>C: Request site
+    C->>D: Validate user credentials
+    D->>E: Validate user credentials
+    E->>D: Return user (none found)
+    D->>C: Return user (none found)
+    C->>C: SSR page
+    C->>A: Return page
+    A->>A: Initialize Redux (without user)
+    A->>D: Create anonymous user
+    D->>E: Create anonymous user
+    E->>D: Return anonymous user
+    D->>A: Return anonymous user
+    A->>A: Set access_token and user in base64-encoded cookie
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## SSR of user via cookie
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```mermaid
+sequenceDiagram
+    participant A as Browser
+    participant B as NextJS Middleware
+    participant C as NextJS Route
+    participant D as Supabase Server
+    participant E as Supabase Database
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    A->>B: Request site<br/>(w/ base64 encoded 🍪)
+    B->>B: Parse cookies to get user credentials
+    B->>D: Validate user credentials<br/>(and refresh token)
+    D->>E: Validate user credentials
+    E->>D: Return user
+    D->>B: Return user
+    B->>C: Request site
+    C->>D: Validate user credentials<br/>(and refresh token... again)
+    D->>E: Validate user credentials
+    E->>D: Return user
+    D->>C: Return user
+    C->>C: SSR page with user content
+    C->>A: Return page
+    A->>A: Initialize Redux (with user)
+```
