@@ -9,12 +9,20 @@ import { getClientSupabase } from "@/db/getClientSupabase";
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const user = useAppSelector((state) => userSelectors.getUser(state));
   const dispatch = useAppDispatch();
-  const creatingUser = React.useRef(false);
+  const fetchingOrCreatingUser = React.useRef(false);
 
   React.useEffect(() => {
-    async function createAnonymousUser() {
-      if (creatingUser.current) return;
-      creatingUser.current = true;
+    async function createAnonymousUserIfNoUserFound() {
+      if (fetchingOrCreatingUser.current || user != null) return;
+      fetchingOrCreatingUser.current = true;
+
+      const {
+        data: { user: authUser },
+      } = await getClientSupabase().auth.getUser();
+      if (authUser != null) {
+        dispatch(userActions.setUser(authUser));
+        return;
+      }
       if (user == null) {
         const { data, error } =
           await getClientSupabase().auth.signInAnonymously();
@@ -35,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
       }
     }
-    createAnonymousUser();
+    createAnonymousUserIfNoUserFound();
   }, [dispatch, user]);
 
   if (user == null) {
