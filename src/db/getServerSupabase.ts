@@ -2,6 +2,7 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { cache } from "react";
 
 let supabase: SupabaseClient | null = null;
 
@@ -44,3 +45,9 @@ export async function getServerSupabase() {
   supabase = await createSupabaseClient();
   return supabase;
 }
+
+export const getUser = cache(async () => {
+  const serverSupabase = await getServerSupabase();
+  const theUser = await serverSupabase.auth.getUser();
+  return theUser.data.user;
+});

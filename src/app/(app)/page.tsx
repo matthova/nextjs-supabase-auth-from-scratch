@@ -1,9 +1,9 @@
-import { getCountForUser } from "@/db/queries";
-import { getServerSupabase } from "@/db/getServerSupabase";
+import { getUser } from "@/db/getServerSupabase";
 import { PageClient } from "./PageClient";
+import { getCountForUser } from "@/db/queries";
 
 export default async function Page() {
-  const user = (await (await getServerSupabase()).auth.getUser()).data.user;
+  const user = await getUser();
   const count = user == null ? null : await getCountForUser(user.id);
 
   return <PageClient count={count} />;
