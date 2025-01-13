@@ -5,6 +5,6 @@ import { revalidatePath } from "next/cache";
 
 export async function incrementCount(formData: FormData) {
   const userId = formData.get("userId")?.toString() ?? "";
-  incrementCountForUser(userId);
+  await incrementCountForUser(userId);
   revalidatePath("/");
 }
