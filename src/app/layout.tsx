@@ -30,9 +30,14 @@ export default async function RootLayout({
     <StoreProvider initialUser={user}>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-full`}
         >
-          {children}
+          <div className="flex-1 min-h-0 overflow-auto">{children}</div>
+          <footer className="flex-none bg-foreground text-background p-2">
+            <a href="https://github.com/matthova/nextjs-supabase-auth-from-scratch">
+              Check out the Github repo here
+            </a>
+          </footer>
         </body>
       </html>
     </StoreProvider>

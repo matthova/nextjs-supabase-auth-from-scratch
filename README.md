@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) app that is utilizing Supabase for Auth and Storage
 
+Check out the live site [here](https://nextjs-supabase-auth-from-scratch.vercel.app/)
+
 The purpose of this repo is to prove out core product requirements for Supabase including the following:
 
 - [x] Auto creation of anonymous users
