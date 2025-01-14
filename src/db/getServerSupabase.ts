@@ -1,8 +1,9 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { cache } from "react";
+import { cookies, headers } from "next/headers";
+import { SupabaseClient, User } from "@supabase/supabase-js";
+import { userParser } from "@/lib/zod";
+import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
 
 let supabase: SupabaseClient | null = null;
 
@@ -46,8 +47,11 @@ export async function getServerSupabase() {
   return supabase;
 }
 
-export const getUser = cache(async () => {
-  const serverSupabase = await getServerSupabase();
-  const theUser = await serverSupabase.auth.getUser();
-  return theUser.data.user;
-});
+export async function getUserObject(): Promise<User | null> {
+  const requestHeaders = await headers();
+  const userString =
+    requestHeaders.get(SUPABASE_USER_OBJECT_HEADER)?.toString() ?? "";
+  if (userString === "") return null;
+  const user = userParser.parse(JSON.parse(userString));
+  return user;
+}

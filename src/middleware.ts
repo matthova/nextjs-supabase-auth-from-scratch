@@ -1,12 +1,9 @@
-import { NextResponse, type NextRequest } from "next/server";
-// import { updateSession } from "@/db/updateSessionMiddleware";
+import { type NextRequest } from "next/server";
+import { updateSession } from "@/db/updateSessionMiddleware";
 
 export async function middleware(request: NextRequest) {
-  return NextResponse.next({
-    request,
-  });
   // update user's auth session
-  // return await updateSession(request);
+  return await updateSession(request);
 }
 
 export const config = {
