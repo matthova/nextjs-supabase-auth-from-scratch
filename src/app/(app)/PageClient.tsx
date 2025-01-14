@@ -16,14 +16,17 @@ export function PageClient({ count }: PageClientProps) {
     (state, newVal: number) => newVal
   );
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>,
+    { fail }: { fail: boolean } = { fail: false }
+  ) {
     e.preventDefault();
     setError(null);
     if (user == null) return;
     React.startTransition(() => {
       setOptimisticCount(optimisticCount + 1);
     });
-    incrementCount(user.id).catch(() => {
+    incrementCount({ userId: user.id, fail }).catch(() => {
       React.startTransition(() => {
         setOptimisticCount(optimisticCount);
       });
@@ -32,7 +35,7 @@ export function PageClient({ count }: PageClientProps) {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <h1>Hello, world!</h1>
       <div>Count: {optimisticCount}</div>
       <form onSubmit={handleSubmit}>
@@ -41,6 +44,14 @@ export function PageClient({ count }: PageClientProps) {
           className="px-2 py-1 border border-solid border-foreground rounded-xl"
         >
           Increment count
+        </button>
+      </form>
+      <form onSubmit={(e) => handleSubmit(e, { fail: true })}>
+        <button
+          type="submit"
+          className="px-2 py-1 border border-solid border-foreground rounded-xl"
+        >
+          Increment count (but fail after 1 second)
         </button>
       </form>
       {error == null ? null : <div className="text-red-500">{error}</div>}
