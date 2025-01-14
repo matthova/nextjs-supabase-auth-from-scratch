@@ -1,1 +1,0 @@
-ALTER TABLE "counts_table" ADD CONSTRAINT "counts_table_user_id_unique" UNIQUE("user_id");

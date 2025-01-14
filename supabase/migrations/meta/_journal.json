@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1736641454191,
-      "tag": "0000_rare_mole_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1736644528256,
-      "tag": "0001_elite_brood",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1736644788138,
-      "tag": "0002_bent_lady_ursula",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1736658004535,
-      "tag": "0003_furry_slayback",
+      "when": 1736815289777,
+      "tag": "0000_magical_hairball",
       "breakpoints": true
     }
   ]
