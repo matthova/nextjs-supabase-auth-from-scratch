@@ -31,9 +31,12 @@ export async function updateSession(request: NextRequest) {
   );
 
   // refreshing the auth token
+  const beforeUser = performance.now();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const afterUser = performance.now();
+  console.log("Time to get user:", afterUser - beforeUser);
 
   supabaseResponse.headers.delete(SUPABASE_USER_OBJECT_HEADER);
   if (user != null) {
