@@ -3,7 +3,7 @@ This is a [Next.js](https://nextjs.org) app that is utilizing Supabase for Auth 
 The purpose of this repo is to prove out core product requirements for Supabase including the following:
 
 - [x] Auto creation of anonymous users
-- [ ] Create minimal "Counter" and allow optimistic, persisted storage of the value, per-user
+- [x] Create minimal "Counter" and allow optimistic, persisted storage of the value, per-user
 - [ ] Account linking with email / password
 - [ ] Sign in with email / password
 - [ ] Password recovery / reset
