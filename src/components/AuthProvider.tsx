@@ -8,6 +8,7 @@ import { getClientSupabase } from "@/db/getClientSupabase";
 // Block from rendering the app until we have a user
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const user = useAppSelector((state) => userSelectors.getUser(state));
+  const userIsNullish = user == null;
   const dispatch = useAppDispatch();
   const creatingUser = React.useRef(false);
 
@@ -33,10 +34,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch(
           userActions.initializeUser({ user: data.user, session: data.session })
         );
+        creatingUser.current = false;
       }
     }
     createAnonymousUser();
-  }, [dispatch, user]);
+  }, [dispatch, user, userIsNullish]);
 
   if (user == null) {
     return <div>Loading...</div>;

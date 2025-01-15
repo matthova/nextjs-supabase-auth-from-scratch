@@ -4,6 +4,7 @@ import { userSelectors } from "@/lib/slices/userSlice";
 import { useAppSelector } from "@/lib/storeHooks";
 import { incrementCount } from "../actions/incrementCount";
 import React from "react";
+import Link from "next/link";
 
 interface PageClientProps {
   count: number | null;
@@ -56,6 +57,14 @@ export function PageClient({ count }: PageClientProps) {
       </form>
       {error == null ? null : <div className="text-red-500">{error}</div>}
       <br />
+      {user?.is_anonymous ? (
+        <Link
+          href="/sign-up"
+          className="p-2 border border-solid border-foreground rounded-xl self-start"
+        >
+          Sign up
+        </Link>
+      ) : null}
       <h2>User Info</h2>
       <div>
         {Object.entries(user ?? {}).map(([key, value]) => (
