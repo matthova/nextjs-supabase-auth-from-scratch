@@ -4,6 +4,7 @@ import "./globals.css";
 import StoreProvider from "@/components/StoreProvider";
 import { getUserObject } from "@/db/getServerSupabase";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,10 +38,8 @@ export default async function RootLayout({
             <Header />
           </div>
           <div className="flex-1 min-h-0 overflow-auto">{children}</div>
-          <footer className="flex-none bg-foreground text-background p-2">
-            <a href="https://github.com/matthova/nextjs-supabase-auth-from-scratch">
-              Check out the Github repo here
-            </a>
+          <footer className="flex-none">
+            <Footer />
           </footer>
         </body>
       </html>
