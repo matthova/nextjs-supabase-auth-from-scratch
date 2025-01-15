@@ -3,7 +3,6 @@
 import { getClientSupabase } from "@/db/getClientSupabase";
 import { userActions, userSelectors } from "@/lib/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/storeHooks";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function SignUpPage() {
@@ -28,7 +27,6 @@ function SignUpWithEmailAndPassword() {
     SignUpState.INITIAL
   );
 
-  const router = useRouter();
   const currentUser = useAppSelector((state) => userSelectors.getUser(state));
   const dispatch = useAppDispatch();
 
@@ -54,8 +52,8 @@ function SignUpWithEmailAndPassword() {
       dispatch(userActions.updateUser(user));
       setSignUpState(SignUpState.SUCCESS);
     } catch (error) {
-      console.log("the error", error, JSON.stringify(error, null, 2));
-      setError(error?.message ?? "oh no");
+      // @ts-expect-error Just parse it....
+      setError(error?.message ?? "Sign up failed");
       setSignUpState(SignUpState.ERROR);
     }
   }
