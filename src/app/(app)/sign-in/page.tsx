@@ -173,6 +173,20 @@ export default function SignInWithEmail() {
             >
               Continue
             </button>
+            <div>or</div>
+            <button
+              className="px-2 py-1 border border-solid border-foreground rounded-lg"
+              onClick={async () => {
+                await getClientSupabase().auth.signInWithOAuth({
+                  provider: "google",
+                  options: {
+                    redirectTo: `${window.location.origin}/auth/callback`,
+                  },
+                });
+              }}
+            >
+              Sign in with Google
+            </button>
           </>
         ) : null}
         {signInState === SignInState.ERROR ? (

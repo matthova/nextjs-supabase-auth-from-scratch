@@ -7,7 +7,7 @@ The purpose of this repo is to prove out core product requirements for Supabase 
 - [x] Auto creation of anonymous users
 - [x] Create minimal "Counter" and allow optimistic, persisted storage of the value, per-user
 - [x] Sign in / account creation with magic link
-- [ ] Account linking with Google
+- [x] Account linking with Google
 
 ## Getting Started
 
