@@ -8,10 +8,13 @@ export async function incrementCountForUser(userId: string) {
     await db.insert(countsTable).values({ userId, count: 1 }).execute();
     return;
   }
-  await db.update(countsTable).set({
-    userId,
-    count: count + 1,
-  });
+  await db
+    .update(countsTable)
+    .set({
+      count: count + 1,
+    })
+    .where(eq(countsTable.userId, userId))
+    .execute();
 }
 
 export async function getCountForUser(userId: string): Promise<number | null> {
