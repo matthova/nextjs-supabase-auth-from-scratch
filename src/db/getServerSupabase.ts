@@ -1,10 +1,11 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { SupabaseClient, User } from "@supabase/supabase-js";
+import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
+import { userParser } from "@/lib/zod";
 
 let supabase: SupabaseClient | null = null;
-let user: User | null = null;
 
 async function createSupabaseClient() {
   const cookieStore = await cookies();
@@ -47,8 +48,10 @@ export async function getServerSupabase() {
 }
 
 export async function getUserObject(): Promise<User | null> {
-  if (user != null) return user;
-  const newUser = await (await getServerSupabase()).auth.getUser();
-  user = newUser.data.user;
+  const requestHeaders = await headers();
+  const userString =
+    requestHeaders.get(SUPABASE_USER_OBJECT_HEADER)?.toString() ?? "";
+  if (userString === "") return null;
+  const user = userParser.parse(JSON.parse(userString));
   return user;
 }
