@@ -11,9 +11,13 @@ export function Header() {
 
   return (
     <div className="p-2 flex justify-between border border-solid border-foreground">
-      <Link href="/">Home</Link>
+      <Link prefetch href="/">
+        Home
+      </Link>
       {user?.is_anonymous ? (
-        <Link href="/sign-in">Sign in</Link>
+        <Link prefetch href="/sign-in">
+          Sign in
+        </Link>
       ) : (
         <button
           onClick={async () => {

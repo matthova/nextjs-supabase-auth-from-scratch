@@ -4,7 +4,6 @@ import { userSelectors } from "@/lib/slices/userSlice";
 import { useAppSelector } from "@/lib/storeHooks";
 import { incrementCount } from "../actions/incrementCount";
 import React from "react";
-import Link from "next/link";
 
 interface PageClientProps {
   count: number | null;
@@ -36,13 +35,13 @@ export function PageClient({ count }: PageClientProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 p-2">
       <h1>Hello, world!</h1>
       <div>Count: {optimisticCount}</div>
       <form onSubmit={handleSubmit}>
         <button
           type="submit"
-          className="px-2 py-1 border border-solid border-foreground rounded-xl"
+          className="px-2 py-1 border border-solid border-foreground rounded-lg"
         >
           Increment count
         </button>
@@ -50,28 +49,26 @@ export function PageClient({ count }: PageClientProps) {
       <form onSubmit={(e) => handleSubmit(e, { fail: true })}>
         <button
           type="submit"
-          className="px-2 py-1 border border-solid border-foreground rounded-xl"
+          className="px-2 py-1 border border-solid border-foreground rounded-lg"
         >
           Increment count (but fail after 1 second)
         </button>
       </form>
       {error == null ? null : <div className="text-red-500">{error}</div>}
-      <br />
-      {user?.is_anonymous ? (
-        <Link
-          href="/sign-up"
-          className="p-2 border border-solid border-foreground rounded-xl self-start"
-        >
-          Sign up
-        </Link>
-      ) : null}
       <h2>User Info</h2>
       <div>
-        {Object.entries(user ?? {}).map(([key, value]) => (
-          <div key={key}>
-            {key}: {JSON.stringify(value)}
-          </div>
-        ))}
+        <table className="border-collapse border border-gray-300">
+          <tbody>
+            {Object.entries(user ?? {}).map(([key, value]) => (
+              <tr key={key}>
+                <td className="border border-gray-300 p-1">{key}</td>
+                <td className="border border-gray-300 p-1">
+                  {typeof value === "object" ? JSON.stringify(value) : value}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

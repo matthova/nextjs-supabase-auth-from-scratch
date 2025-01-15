@@ -69,7 +69,7 @@ export default function SignInWithEmail() {
         <div className="p-2">
           <div>Confirmation email has been sent to {newEmail}</div>
           <button
-            className="p-2 border rounded-xl"
+            className="p-2 border rounded-lg"
             onClick={async () => {
               const {
                 data: { user },
@@ -94,14 +94,14 @@ export default function SignInWithEmail() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="p-2 ml-2 border border-solid border-foreground rounded-xl text-foreground bg-background"
+                className="p-2 ml-2 border border-solid border-foreground rounded-lg text-foreground bg-background"
               />
             </label>
           </div>
           <button
             type="submit"
             onClick={handleSignIn}
-            className="px-2 py-1 border border-solid border-foreground rounded-xl self-start"
+            className="px-2 py-1 border border-solid border-foreground rounded-lg self-start"
             disabled={signInState === SignInState.LOADING}
           >
             Continue
