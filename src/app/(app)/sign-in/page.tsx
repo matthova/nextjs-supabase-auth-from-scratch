@@ -5,44 +5,33 @@ import { userActions, userSelectors } from "@/lib/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/storeHooks";
 import React from "react";
 
-export default function SignUpPage() {
-  return (
-    <div>
-      <SignUpWithEmailAndPassword />
-    </div>
-  );
-}
-
-enum SignUpState {
+enum SignInState {
   INITIAL,
   LOADING,
   ERROR,
   SUCCESS,
 }
 
-function SignUpWithEmailAndPassword() {
+export default function SignInWithEmail() {
   const [error, setError] = React.useState<string | null>(null);
   const [email, setEmail] = React.useState<string>("");
-  const [signUpState, setSignUpState] = React.useState<SignUpState>(
-    SignUpState.INITIAL
+  const [signInState, setSignInState] = React.useState<SignInState>(
+    SignInState.INITIAL
   );
 
   const currentUser = useAppSelector((state) => userSelectors.getUser(state));
   const dispatch = useAppDispatch();
 
-  async function handleSignUp() {
+  async function handleSignIn() {
     setError(null);
-    setSignUpState(SignUpState.LOADING);
+    setSignInState(SignInState.LOADING);
 
     try {
       const supabase = getClientSupabase();
       const response = await supabase.auth.updateUser({
         email,
       });
-      console.log("response", response);
-      debugger;
       if (response.error != null) {
-        debugger;
         throw response.error;
       }
       const user = response.data?.user;
@@ -50,34 +39,32 @@ function SignUpWithEmailAndPassword() {
         throw new Error("Updated user is nullish");
       }
       dispatch(userActions.updateUser(user));
-      setSignUpState(SignUpState.SUCCESS);
+      setSignInState(SignInState.SUCCESS);
     } catch (error) {
+      if (
+        // @ts-expect-error Just parse it....
+        error?.code === "email_exists"
+      ) {
+        try {
+          await getClientSupabase().auth.signInWithOtp({
+            email,
+          });
+          return;
+        } catch (ex) {
+          console.log("Sign up with otp error", ex);
+        }
+      }
       // @ts-expect-error Just parse it....
-      setError(error?.message ?? "Sign up failed");
-      setSignUpState(SignUpState.ERROR);
+      setError(error?.message ?? "Sign Up failed");
+      setSignInState(SignInState.ERROR);
     }
   }
 
   const newEmail = currentUser?.new_email;
 
-  if (currentUser?.is_anonymous === false) {
-    return (
-      <div>
-        <div>Already signed in</div>
-        <button
-          onClick={async () => {
-            await getClientSupabase().auth.signOut();
-            dispatch(userActions.setUser(null));
-          }}
-        >
-          Log Out?
-        </button>
-      </div>
-    );
-  }
   return (
     <div className="flex flex-col gap-2">
-      <h1>Sign up with email</h1>
+      <h1>Sign-up/Login to your account</h1>
       {newEmail == null ? null : (
         <div className="p-2">
           <div>Confirmation email has been sent to {newEmail}</div>
@@ -98,7 +85,7 @@ function SignUpWithEmailAndPassword() {
           </button>
         </div>
       )}
-      {signUpState === SignUpState.SUCCESS ? null : (
+      {signInState === SignInState.SUCCESS ? null : (
         <div className="flex flex-col gap-2">
           <div>
             <label>
@@ -113,11 +100,11 @@ function SignUpWithEmailAndPassword() {
           </div>
           <button
             type="submit"
-            onClick={handleSignUp}
+            onClick={handleSignIn}
             className="px-2 py-1 border border-solid border-foreground rounded-xl self-start"
-            disabled={signUpState === SignUpState.LOADING}
+            disabled={signInState === SignInState.LOADING}
           >
-            Sign up
+            Continue
           </button>
         </div>
       )}
