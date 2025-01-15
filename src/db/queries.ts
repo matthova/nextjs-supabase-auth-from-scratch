@@ -9,6 +9,7 @@ export async function incrementCountForUser(userId: string) {
     return;
   }
   await db.update(countsTable).set({
+    userId,
     count: count + 1,
   });
 }
