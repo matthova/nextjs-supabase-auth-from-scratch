@@ -63,7 +63,9 @@ export function PageClient({ count }: PageClientProps) {
               <tr key={key}>
                 <td className="border border-gray-300 p-1">{key}</td>
                 <td className="border border-gray-300 p-1">
-                  {typeof value === "object" ? JSON.stringify(value) : value}
+                  {["object", "boolean"].includes(typeof value)
+                    ? JSON.stringify(value)
+                    : value}
                 </td>
               </tr>
             ))}
