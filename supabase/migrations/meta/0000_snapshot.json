@@ -1,5 +1,5 @@
 {
-  "id": "7084b5f3-a6f0-4782-99ae-b2625ab7dfa9",
+  "id": "5a65fd33-f9ee-450b-a257-cd125c94a16d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -56,9 +56,20 @@
           ]
         }
       },
-      "policies": {},
+      "policies": {
+        "owner can read and update": {
+          "name": "owner can read and update",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"counts_table\".\"user_id\" = (select auth.uid())",
+          "withCheck": "\"counts_table\".\"user_id\" = (select auth.uid())"
+        }
+      },
       "checkConstraints": {},
-      "isRLSEnabled": false
+      "isRLSEnabled": true
     }
   },
   "enums": {},
