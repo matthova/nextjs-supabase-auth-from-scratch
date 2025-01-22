@@ -1,5 +1,5 @@
 {
-  "id": "5a65fd33-f9ee-450b-a257-cd125c94a16d",
+  "id": "0d832fc3-dc2a-423e-ad25-65734447f7ab",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -57,15 +57,42 @@
         }
       },
       "policies": {
-        "owner can read and update": {
-          "name": "owner can read and update",
+        "authenticated user can create": {
+          "name": "authenticated user can create",
           "as": "PERMISSIVE",
-          "for": "ALL",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "true"
+        },
+        "owner can view count": {
+          "name": "owner can view count",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"counts_table\".\"user_id\" = (select auth.uid())"
+        },
+        "owner can update count": {
+          "name": "owner can update count",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
           "to": [
             "authenticated"
           ],
           "using": "\"counts_table\".\"user_id\" = (select auth.uid())",
           "withCheck": "\"counts_table\".\"user_id\" = (select auth.uid())"
+        },
+        "owner can delete count": {
+          "name": "owner can delete count",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"counts_table\".\"user_id\" = (select auth.uid())"
         }
       },
       "checkConstraints": {},

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { integer, pgPolicy, pgTable, uuid } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
 import { authenticatedRole, authUid } from "drizzle-orm/supabase";
@@ -14,11 +14,26 @@ export const countsTable = pgTable(
     count: integer("count").notNull().default(0),
   },
   (t) => [
-    pgPolicy("owner can read and update", {
-      for: "all",
+    pgPolicy("authenticated user can create", {
+      for: "insert",
+      to: authenticatedRole,
+      withCheck: sql`true`,
+    }),
+    pgPolicy("owner can view count", {
+      for: "select",
+      to: authenticatedRole,
+      using: eq(t.userId, authUid),
+    }),
+    pgPolicy("owner can update count", {
+      for: "update",
       to: authenticatedRole,
       using: eq(t.userId, authUid),
       withCheck: eq(t.userId, authUid),
+    }),
+    pgPolicy("owner can delete count", {
+      for: "delete",
+      to: authenticatedRole,
+      using: eq(t.userId, authUid),
     }),
   ]
 ).enableRLS();
