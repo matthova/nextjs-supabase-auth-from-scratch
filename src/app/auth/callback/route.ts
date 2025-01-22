@@ -1,4 +1,4 @@
-import { getServerSupabase } from "@/db/getServerSupabase";
+import { createSupabaseClient } from "@/db/getServerSupabase";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/";
 
   if (code) {
-    const supabase = await getServerSupabase();
+    const supabase = await createSupabaseClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer

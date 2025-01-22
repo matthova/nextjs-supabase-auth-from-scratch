@@ -1,13 +1,11 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies, headers } from "next/headers";
-import { SupabaseClient, User } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
 import { userParser } from "@/lib/zod";
 
-let supabase: SupabaseClient | null = null;
-
-async function createSupabaseClient() {
+export async function createSupabaseClient() {
   const cookieStore = await cookies();
 
   // Create a server's supabase client with newly configured cookie,
@@ -36,15 +34,6 @@ async function createSupabaseClient() {
   );
 
   return client;
-}
-
-export async function getServerSupabase() {
-  if (supabase != null) {
-    return supabase;
-  }
-
-  supabase = await createSupabaseClient();
-  return supabase;
 }
 
 export async function getUserObject(): Promise<User | null> {
