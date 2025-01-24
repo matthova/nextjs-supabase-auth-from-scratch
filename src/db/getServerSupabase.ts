@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import { User } from "@supabase/supabase-js";
 import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
 import { userParser } from "@/lib/zod";
+import { createEncoder, decrypt } from "@/lib/encryptDecrypt";
 
 export async function createSupabaseClient() {
   const cookieStore = await cookies();
@@ -41,6 +42,7 @@ export async function getUserObject(): Promise<User | null> {
   const userString =
     requestHeaders.get(SUPABASE_USER_OBJECT_HEADER)?.toString() ?? "";
   if (userString === "") return null;
-  const user = userParser.parse(JSON.parse(userString));
+  const decrypted = await decrypt(userString);
+  const user = userParser.parse(JSON.parse(decrypted));
   return user;
 }
