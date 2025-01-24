@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import { User } from "@supabase/supabase-js";
 import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
 import { userParser } from "@/lib/zod";
-import { createEncoder, decrypt } from "@/lib/encryptDecrypt";
+import { decrypt } from "@/lib/encryptDecrypt";
 
 export async function createSupabaseClient() {
   const cookieStore = await cookies();
