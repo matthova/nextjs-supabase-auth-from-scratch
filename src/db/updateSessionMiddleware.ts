@@ -1,4 +1,5 @@
 import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
+import { encrypt } from "@/lib/encryptDecrypt";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -40,9 +41,12 @@ export async function updateSession(request: NextRequest) {
 
   supabaseResponse.headers.delete(SUPABASE_USER_OBJECT_HEADER);
   if (user != null) {
+    const userString = JSON.stringify(user);
+    const encryptedUserString = await encrypt(userString);
+
     supabaseResponse.headers.set(
       SUPABASE_USER_OBJECT_HEADER,
-      JSON.stringify(user)
+      encryptedUserString
     );
   }
 
