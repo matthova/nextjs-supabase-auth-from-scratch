@@ -126,6 +126,11 @@ sequenceDiagram
     A->>A: Initialize Redux (with user)
 ```
 
+## Details related to passing the user object via headers
+
+- The user object is encrypted to remove any unnecessary PII floating around
+- A key for encrypting / decrypting can be generated via "openssl rand --base64 32"
+
 <details>
 <summary>(Not used) - Auth approach suggested by Supabase</summary>
 
