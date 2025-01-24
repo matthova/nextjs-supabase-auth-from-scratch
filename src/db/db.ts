@@ -6,7 +6,7 @@ import { createSupabaseClient } from "./getServerSupabase";
 
 import { createDrizzle } from "./drizzle";
 import * as schema from "./schema";
-import { decode } from "./jwt";
+import { decodeWithRole } from "./jwt";
 
 const config = {
   casing: "snake_case",
@@ -32,5 +32,6 @@ export async function createDrizzleSupabaseClient() {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  return createDrizzle(decode(session?.access_token ?? ""), { admin, client });
+  const jwtWithRole = decodeWithRole(session?.access_token ?? "");
+  return createDrizzle(jwtWithRole, { admin, client });
 }

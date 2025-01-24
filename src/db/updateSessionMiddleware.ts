@@ -1,7 +1,7 @@
 import { SUPABASE_USER_OBJECT_HEADER } from "@/constants";
-import { encrypt } from "@/lib/encryptDecrypt";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import * as jose from "jose";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -40,14 +40,16 @@ export async function updateSession(request: NextRequest) {
   console.log("Time to get user:", afterUser - beforeUser);
 
   supabaseResponse.headers.delete(SUPABASE_USER_OBJECT_HEADER);
-  if (user != null) {
-    const userString = JSON.stringify(user);
-    const encryptedUserString = await encrypt(userString);
 
-    supabaseResponse.headers.set(
-      SUPABASE_USER_OBJECT_HEADER,
-      encryptedUserString
-    );
+  if (user != null) {
+    const secret = jose.base64url.decode(process.env.HEADER_ENCODE_SECRET!);
+    const jwt = await new jose.EncryptJWT({ ...user })
+      .setIssuedAt()
+      .setExpirationTime("10s")
+      .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256" })
+      .encrypt(secret);
+
+    supabaseResponse.headers.set(SUPABASE_USER_OBJECT_HEADER, jwt);
   }
 
   return supabaseResponse;
