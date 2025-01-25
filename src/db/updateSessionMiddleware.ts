@@ -42,7 +42,9 @@ export async function updateSession(request: NextRequest) {
   supabaseResponse.headers.delete(SUPABASE_USER_OBJECT_HEADER);
 
   if (user != null) {
-    const secret = jose.base64url.decode(process.env.HEADER_ENCODE_SECRET!);
+    const secret = jose.base64url.decode(
+      process.env.USER_OBJECT_ENCODE_SECRET!
+    );
     const jwt = await new jose.EncryptJWT({ ...user })
       .setIssuedAt()
       .setExpirationTime("10s")

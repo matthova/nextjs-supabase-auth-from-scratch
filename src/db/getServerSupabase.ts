@@ -42,7 +42,7 @@ export async function getUserObject(): Promise<User | null> {
   const userString =
     requestHeaders.get(SUPABASE_USER_OBJECT_HEADER)?.toString() ?? "";
   if (userString === "") return null;
-  const secret = jose.base64url.decode(process.env.HEADER_ENCODE_SECRET!);
+  const secret = jose.base64url.decode(process.env.USER_OBJECT_ENCODE_SECRET!);
   const { payload } = await jose.jwtDecrypt(userString, secret);
   const user = userParser.parse(payload);
   return user;
